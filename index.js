@@ -52,6 +52,14 @@ io.on("connection", async (socket) => {
     socket.on('sending_paths', (req) => {
       io.to(req.roomId).emit('recieve_paths', req.pathData)
     })
+
+/*     socket.on('sending_undo', (req) => {      
+      io.in(req.roomId).emit('receive_undo');
+    }) */
+
+    socket.on('sending_reset', (req) => {      
+      io.in(req.roomId).emit('receive_reset');
+    })
 })
 
 const PORT = process.env.PORT || 5000;

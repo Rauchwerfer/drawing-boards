@@ -28,8 +28,8 @@ export default function DrawingBoard({ roomId }) {
                 X: rect.left + window.scrollX,
                 Y: rect.top + window.scrollY
             })
-            console.log(canvasOffset.X)
-            console.log(canvasOffset.Y)
+            //console.log(canvasOffset.X)
+            //console.log(canvasOffset.Y)
         }
 
         handleResize()
@@ -68,12 +68,24 @@ export default function DrawingBoard({ roomId }) {
             setPathElements(prevPathElements => [...prevPathElements, newPathElement])
         }
 
+/*         const onUndo = () => {
+            setPathElements(prevPathElements => [...prevPathElements].slice(0, prevPathElements.length - 1))
+        } */
+    
+        const onReset = () => {
+            setPathElements([])
+        }
+
         socket.on('recieve_paths', updatePaths)
+        //socket.on('receive_undo', onUndo)
+        socket.on('receive_reset', onReset)
 
         return () => {
             window.removeEventListener('resize', handleResize)
 
             socket.off('recieve_paths', updatePaths)
+            //socket.off('receive_undo', onUndo)
+            socket.off('receive_reset', onReset)
         }
     }, [])
 
@@ -120,7 +132,7 @@ export default function DrawingBoard({ roomId }) {
 
     const handleMouseDown = (e) => {
         setIsDrawing(true)
-        console.log('handleMouseDown')
+        //console.log('handleMouseDown')
 
         const currentPoint = {
             x: e.clientX - canvasOffset.X + window.scrollX,
@@ -131,7 +143,7 @@ export default function DrawingBoard({ roomId }) {
     }
 
     const handleMouseUp = (e) => {
-        console.log('handleMouseUp')
+        //console.log('handleMouseUp')
         setIsDrawing(false)
 
         const newPathData = {
@@ -151,7 +163,7 @@ export default function DrawingBoard({ roomId }) {
 
     const handleMouseMove = (e) => {
         if (!isDrawing) return
-        console.log('handleMouseMove')
+        //console.log('handleMouseMove')
 
         const currentPoint = {
             x: e.clientX - canvasOffset.X + window.scrollX,
@@ -175,20 +187,21 @@ export default function DrawingBoard({ roomId }) {
 
     }
 
-    const undo = () => {
-        setPathElements(prevPathElements => [...prevPathElements].slice(0, prevPathElements.length - 1))
-    }
+/*     const undo = () => {
+        socket.emit('sending_undo', {
+            roomId: roomId
+        })
+    } */
 
     const reset = () => {
         socket.emit('sending_reset', {
             roomId: roomId
         })
-        setPathElements([])
     }
 
     return (
         <>
-            <div role="presentation" id="canvas-container" touch-action="none" style={{ touchAction: 'none', width: '100%', height: '100%', border: '0.0625rem solid rgb(156, 156, 156)', aspectRatio: '1.6 / 1', maxWidth: '960px' }}>
+            <div role="presentation" id="canvas-container" touch-action="none" style={{ touchAction: 'none', width: '100%', height: '100%', border: '0.0625rem solid rgb(156, 156, 156)', aspectRatio: '1.6 / 1', maxWidth: '800px', minWidth: '800px' }}>
                 <svg
                     version="1.1"
                     baseProfile="full"
@@ -211,7 +224,6 @@ export default function DrawingBoard({ roomId }) {
                 </svg>
             </div>
             <div>
-                <button onClick={undo}>Undo</button>
                 <button onClick={reset}>Reset</button>
                 <input type='color' value={currentPathColor} onChange={(e) => setCurrentPathColor(e.target.value)} />
                 <input type='range' value={currentPathWidth} onChange={(e) => setCurrentPathWidth(e.target.value)} min='4' max='40' />
