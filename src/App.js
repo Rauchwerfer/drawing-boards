@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSocket } from "./contexts/SocketProvider";
 import Room from "./components/Room";
 import { useAuth } from "./contexts/AuthProvider";
+import { Button, Container, Form } from "react-bootstrap";
 
 function App() {
   const socket = useSocket()
@@ -39,39 +40,52 @@ function App() {
 
 
   return (
-    <>
-      <h1>Online Drawer</h1>
+    <Container>
+      <div className="">
+        <h1>Drawing Boards</h1>
+
+        {roomId === '' ?
+          (
+            <div>
+              <div>
+                <h3>Choose a name</h3>
+                <Form.Control
+                  placeholder="Username"
+                  type="text"
+                  id="username" 
+                  value={auth.username} 
+                  onChange={e => auth.setUsername(e.target.value)}
+                />
+                <Button onClick={auth.generatePockemonName}>Regenerate</Button>
+              </div>
+
+              <div>
+                <>
+                <h3>Join existing room...</h3>
+                  <Form.Control
+                    placeholder="Type Room Id..."
+                    type="text"
+                    id="roomId"
+                    ref={roomIdInputRef}
+                  />
+                </>
+                
+                <Button onClick={joinRoom}>Join room</Button>
+              </div>
+              <h3>...or create new one</h3>
+              <Button onClick={createRoom}>Create room</Button>
+            </div>
+          )
+          :
+          (
+            <Room roomId={roomId} />
+          )
+        }
+      </div>
 
 
-      {roomId === '' ?
-        (
-          <>
-            <>
-              <label htmlFor="username">Username:</label>
-              <input type="text" id="username" value={auth.username} onChange={e => auth.setUsername(e.target.value)} />
-              <button onClick={auth.generatePockemonName}>Regenerate</button>
-            </>
 
-            <>
-              <>
-                <label htmlFor="roomId">Join room:</label>
-                <input type="text" id="roomId" ref={roomIdInputRef} />
-              </>
-
-              <button onClick={joinRoom}>Join room</button>
-            </>
-
-            <button onClick={createRoom}>Create room</button>
-          </>
-        )
-        :
-        (
-          <Room roomId={roomId} />
-        )
-      }
-
-
-    </>
+    </Container>
   );
 }
 

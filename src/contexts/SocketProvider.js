@@ -12,7 +12,7 @@ export function SocketProvider({ children }) {
 
   useEffect(() => {
     console.log('Starting socket...')
-    const newSocket = io({
+    const newSocket = io("localhost:5000",{
       autoConnect: false
     })
     

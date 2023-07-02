@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import bezierCommand from "../utils/bezierCurve"
 import { useSocket } from "../contexts/SocketProvider"
+import { Button, Form } from "react-bootstrap"
 
 export default function DrawingBoard({ roomId }) {
     //
@@ -14,7 +15,7 @@ export default function DrawingBoard({ roomId }) {
 
     const [pathElements, setPathElements] = useState([])
 
-    const [currentPathColor, setCurrentPathColor] = useState('#000000')
+    const [currentPathColor, setCurrentPathColor] = useState('#8C00FF')
     const [currentPathWidth, setCurrentPathWidth] = useState(10)
     const [currentPathPoints, setCurrentPathPoints] = useState([])
 
@@ -68,10 +69,10 @@ export default function DrawingBoard({ roomId }) {
             setPathElements(prevPathElements => [...prevPathElements, newPathElement])
         }
 
-/*         const onUndo = () => {
-            setPathElements(prevPathElements => [...prevPathElements].slice(0, prevPathElements.length - 1))
-        } */
-    
+        /*         const onUndo = () => {
+                    setPathElements(prevPathElements => [...prevPathElements].slice(0, prevPathElements.length - 1))
+                } */
+
         const onReset = () => {
             setPathElements([])
         }
@@ -187,11 +188,11 @@ export default function DrawingBoard({ roomId }) {
 
     }
 
-/*     const undo = () => {
-        socket.emit('sending_undo', {
-            roomId: roomId
-        })
-    } */
+    /*     const undo = () => {
+            socket.emit('sending_undo', {
+                roomId: roomId
+            })
+        } */
 
     const reset = () => {
         socket.emit('sending_reset', {
@@ -200,7 +201,7 @@ export default function DrawingBoard({ roomId }) {
     }
 
     return (
-        <div>
+        <div className="">
             <div role="presentation" id="canvas-container" touch-action="none" style={{ touchAction: 'none', width: '100%', height: '100%', border: '0.0625rem solid rgb(156, 156, 156)', aspectRatio: '1.6 / 1', maxWidth: '800px', minWidth: '800px' }}>
                 <svg
                     version="1.1"
@@ -223,10 +224,33 @@ export default function DrawingBoard({ roomId }) {
                     </g>
                 </svg>
             </div>
-            <div>
-                <button onClick={reset}>Reset</button>
-                <input type='color' value={currentPathColor} onChange={(e) => setCurrentPathColor(e.target.value)} />
-                <input type='range' value={currentPathWidth} onChange={(e) => setCurrentPathWidth(e.target.value)} min='4' max='40' />
+            <div className="row p-2">
+                <div className="col-4">
+                    <Button variant="danger" onClick={reset}>Reset</Button>
+                </div>
+                <div className="col-4">
+                    <Form.Label htmlFor="strokeColor">Stroke Color</Form.Label>
+                    <Form.Control
+                        type="color"
+                        title="Choose your color"
+                        id='strokeColor'
+                        value={currentPathColor}
+                        onChange={(e) => setCurrentPathColor(e.target.value)}
+                    />
+                </div>
+                <div className="col-4">
+                    <Form.Label htmlFor="strokeWidth">Stroke Width</Form.Label>
+                    <Form.Range
+                        value={currentPathWidth}
+                        id='strokeWidth'
+                        onChange={(e) => setCurrentPathWidth(e.target.value)}
+                        min='4'
+                        max='40'
+                    />
+                </div>
+
+
+
             </div>
         </div>
     )
