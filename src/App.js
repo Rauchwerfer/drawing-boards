@@ -16,7 +16,9 @@ function App() {
   }
 
   const joinRoom = () => {
-    socket.emit('request_join_room', roomIdInputRef.current.value)
+    socket.emit('request_join_room', {
+      roomId: roomIdInputRef.current.value
+    })
   }
 
   useEffect(() => {
@@ -47,6 +49,7 @@ function App() {
             <>
               <label htmlFor="username">Username:</label>
               <input type="text" id="username" value={auth.username} onChange={e => auth.setUsername(e.target.value)} />
+              <button onClick={auth.generatePockemonName}>Regenerate</button>
             </>
 
             <>

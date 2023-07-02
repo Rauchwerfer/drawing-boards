@@ -31,10 +31,10 @@ io.on("connection", async (socket) => {
       socket.emit('placed_to_room', roomId)
     });
 
-    socket.on("request_join_room", (roomId) => {
-      if (io.sockets.adapter.rooms.get(roomId) !== undefined) {
-        socket.join(roomId)
-        socket.emit('placed_to_room', roomId)
+    socket.on("request_join_room", (req) => {
+      if (io.sockets.adapter.rooms.get(req.roomId) !== undefined) {
+        socket.join(req.roomId)
+        socket.emit('placed_to_room', req.roomId)
       }      
     });
 

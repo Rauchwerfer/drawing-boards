@@ -200,7 +200,7 @@ export default function DrawingBoard({ roomId }) {
     }
 
     return (
-        <>
+        <div>
             <div role="presentation" id="canvas-container" touch-action="none" style={{ touchAction: 'none', width: '100%', height: '100%', border: '0.0625rem solid rgb(156, 156, 156)', aspectRatio: '1.6 / 1', maxWidth: '800px', minWidth: '800px' }}>
                 <svg
                     version="1.1"
@@ -228,6 +228,6 @@ export default function DrawingBoard({ roomId }) {
                 <input type='color' value={currentPathColor} onChange={(e) => setCurrentPathColor(e.target.value)} />
                 <input type='range' value={currentPathWidth} onChange={(e) => setCurrentPathWidth(e.target.value)} min='4' max='40' />
             </div>
-        </>
+        </div>
     )
 }
